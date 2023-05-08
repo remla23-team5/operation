@@ -1,6 +1,6 @@
 
 
-# Project Name
+# Restaurant sentiment analysis by group 5
 
 This repository contains all deployment files for Docker Compose to deploy and run the restaurant sentiment analysis application.
 
