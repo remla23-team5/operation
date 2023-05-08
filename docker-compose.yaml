@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  app:
+    image: ghcr.io/remla23-team5/app:latest
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    depends_on:
+      - model-service
+    environment:
+      MODEL_SERVICE_URL: "http://model-service:8080"
+      
+  model-service:
+    image: ghcr.io/remla23-team5/model-service:main
+    ports:
+      - "8080:8080"
