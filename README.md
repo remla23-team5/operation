@@ -1,5 +1,3 @@
-
-
 # Restaurant sentiment analysis by group 5
 
 This repository contains all deployment files for Docker Compose to deploy and run the restaurant sentiment analysis application.
@@ -20,11 +18,15 @@ cd operation
 ```
 cp sample.env .env
 ```
-4. Run Docker Compose to start the application
+4. Run the following command and provide your GitHub username and password/personal access token (PAT) to sign in to the GitHub Container Registry.
+```
+docker login ghcr.io
+```
+5. Run Docker Compose to start the application
 ```
 docker-compose up
 ```
-5. Access the application via `http://localhost:PORT` (replace `PORT` with the actual port number specified in the `.env` file)
+6. Access the application via `http://localhost:PORT` (replace `PORT` with the actual port number specified in the `.env` file or with 8000, if no `.env` file exists)
 
 ## Requirements
 

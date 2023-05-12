@@ -2,12 +2,14 @@ version: '3.8'
 
 services:
   app:
-    image: ghcr.io/remla23-team5/app:0.1.2
+    image: ghcr.io/remla23-team5/app:latest
     ports:
-      - "8000:8000"
+      - "${APP_PORT:-8000}:8000"
+    depends_on:
+      - model-service
     environment:
-      model_service_url: "http://localhost:8080/predict"
-      
+      model_service_url: "http://model-service:8080/predict"
+
   model-service:
     image: ghcr.io/remla23-team5/model-service:main
     ports:
