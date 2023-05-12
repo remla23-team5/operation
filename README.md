@@ -6,11 +6,11 @@ This repository contains all deployment files for Docker Compose to deploy and r
 
 To start the application, please follow these steps:
 
-1. Clone the repository to your local machine
+1. Clone the repository to your local machine.
 ```
 git clone https://github.com/remla23-team5/operation.git
 ```
-2. Navigate to the repository directory
+2. Navigate to the repository directory.
 ```
 cd operation
 ```
@@ -22,11 +22,11 @@ cp sample.env .env
 ```
 docker login ghcr.io
 ```
-5. Run Docker Compose to start the application
+5. Run Docker Compose to start the application.
 ```
 docker-compose up
 ```
-6. Access the application via `http://localhost:PORT` (replace `PORT` with the actual port number specified in the `.env` file or with 8000, if no `.env` file exists)
+6. Access the application via `http://localhost:APP_PORT` (replace `APP_PORT` with the actual port number specified in the `.env` file or with 8000, if no `.env` file exists).
 
 ## Requirements
 
@@ -35,9 +35,9 @@ docker-compose up
 
 ## Environment Variables
 
-The following environment variables are required to start the application:
+The application makes use of the following environment variables:
 
-- `PORT`: the port number the application should listen on
+- `APP_PORT`: the port number which the application should listen on. By default, it is set to 8000, but a different port number can be set using the `.env` file (NOTE: the value 8080 cannot be used, because that port number is already taken).
 
 ## Codebase Overview
 
