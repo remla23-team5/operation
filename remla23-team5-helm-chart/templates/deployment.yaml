@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+{{- with .Values.deployments.modelservice }}
+metadata:
+  name: {{.name}}
+spec:
+  replicas: {{ $.Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{.selectorLabel}}
+  template:
+    metadata:
+      labels:
+        app: model-service
+    spec:
+      containers:  
+        - name: {{.podname}}
+          image: "{{ .repository }}:{{ .tag }}"
+          ports:
+            - containerPort: {{.port}}
+{{- end }}
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+{{- with .Values.deployments.app }}
+metadata:
+  name: {{.name}}
+spec:
+  replicas: {{ $.Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{.selectorLabel}}
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers: 
+        - name: {{.podname}}
+          image: "{{ .repository }}:{{ .tag }}"
+          ports:
+            - containerPort: {{.port}}
+          env:
+            - name: model_service_url
+              value: "http://{{ $.Values.services.modelservice.name }}:{{ $.Values.services.modelservice.port }}/predict"
+{{- end }}

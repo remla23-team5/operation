@@ -47,3 +47,11 @@ To help you understand the code base, here are some pointers to interesting file
 - `sample.env`: a sample .env file
 
 For more information, please refer to the documentation in the repository.
+
+## Helm Chart
+
+```
+cd remla23-team5-helm-chart/
+helm install <name> --dry-run --debug ./remla23-team5-helm-chart
+helm install <name> ./remla23-team5-helm-chart
+```
