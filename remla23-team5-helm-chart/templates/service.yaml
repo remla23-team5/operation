@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "remla23-team5-helm-chart.fullname" . }}
+  labels:
+    {{- include "remla23-team5-helm-chart.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "remla23-team5-helm-chart.selectorLabels" . | nindent 4 }}
