@@ -1,48 +1,61 @@
 apiVersion: apps/v1
 kind: Deployment
-{{- with .Values.deployments.modelservice }}
 metadata:
-  name: {{.name}}
+  name: {{ include "remla23-team5-helm-chart.fullname" . }}
+  labels:
+    {{- include "remla23-team5-helm-chart.labels" . | nindent 4 }}
 spec:
-  replicas: {{ $.Values.replicaCount }}
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
-      app: {{.selectorLabel}}
+      {{- include "remla23-team5-helm-chart.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       labels:
-        app: model-service
+        {{- include "remla23-team5-helm-chart.selectorLabels" . | nindent 8 }}
     spec:
-      containers:  
-        - name: {{.podname}}
-          image: "{{ .repository }}:{{ .tag }}"
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "remla23-team5-helm-chart.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: {{.port}}
-{{- end }}
-
----
-
-apiVersion: apps/v1
-kind: Deployment
-{{- with .Values.deployments.app }}
-metadata:
-  name: {{.name}}
-spec:
-  replicas: {{ $.Values.replicaCount }}
-  selector:
-    matchLabels:
-      app: {{.selectorLabel}}
-  template:
-    metadata:
-      labels:
-        app: app
-    spec:
-      containers: 
-        - name: {{.podname}}
-          image: "{{ .repository }}:{{ .tag }}"
-          ports:
-            - containerPort: {{.port}}
-          env:
-            - name: model_service_url
-              value: "http://{{ $.Values.services.modelservice.name }}:{{ $.Values.services.modelservice.port }}/predict"
-{{- end }}
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
