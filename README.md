@@ -54,3 +54,5 @@ For more information, please refer to the documentation in the repository.
 cd remla23-team5-helm-chart/
 helm install <name> ./remla23-team5-helm-chart
 ```
+
+`minikube service sms-web-serv --url -p remla`
