@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: lib-v1
-  labels: { app: lib, version: v1}
+  name: model-service-v1
+  labels: { app: model-service, version: v1}
 spec:
-  replicas: 2
+  replicas: 1
   selector:
-    matchLabels: { app: lib, version: v1}
+    matchLabels: { app: model-service, version: v1}
   template:
     metadata:
-      labels: { app: lib, version: v1}
+      labels: { app: model-service, version: v1}
     spec:
       containers:
-      - name: lib
+      - name: model-service
         image: ghcr.io/remla23-team5/model-service:v0.0.12
         ports:
         - containerPort: 8080
@@ -25,7 +25,7 @@ metadata:
   name: app-v1
   labels: { app: app, version: v1}
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels: { app: app, version: v1}
   template:
@@ -39,25 +39,25 @@ spec:
         - containerPort: 8000
         env:
         - name: model_service_url
-          value: http://lib:1234/predict
+          value: http://model-service-serv:1234/predict
 
 ---
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: lib-v2
-  labels: { app: lib, version: v2}
+  name: model-service-v2
+  labels: { app: model-service, version: v2}
 spec:
-  replicas: 2
+  replicas: 1
   selector:
-    matchLabels: { app: lib, version: v2}
+    matchLabels: { app: model-service, version: v2}
   template:
     metadata:
-      labels: { app: lib, version: v2}
+      labels: { app: model-service, version: v2}
     spec:
       containers:
-      - name: lib
+      - name: model-service
         image: ghcr.io/remla23-team5/model-service:v0.0.12
         ports:
         - containerPort: 8080
@@ -70,7 +70,7 @@ metadata:
   name: app-v2
   labels: { app: app, version: v2}
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels: { app: app, version: v2}
   template:
@@ -84,7 +84,7 @@ spec:
         - containerPort: 8000
         env:
         - name: model_service_url
-          value: http://lib:1234/predict
+          value: http://model-service-serv:1234/predict
 
 ---
 
@@ -105,10 +105,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: lib
+  name: model-service-serv
 spec:
   selector:
-    app: lib
+    app: model-service
   ports:
     - name: http
       port: 1234
@@ -135,9 +135,9 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: lib
+  name: model-service
 spec:
-  host: lib
+  host: model-service
   subsets:
   - name: v1
     labels:
@@ -168,7 +168,7 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: my-entry-service
+  name: my-entry-service # TODO: Remove all my-
 spec:
   gateways:
     - my-gateway
@@ -193,19 +193,19 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: lib
+  name: model-service
 spec:
   hosts:
-  - lib
+  - model-service
   http:
   - match:
     - sourceLabels:
         version: v2
     route:
     - destination:
-        host: lib
+        host: model-service
         subset: v2
   - route:
     - destination:
-        host: lib
+        host: model-service
         subset: v1
