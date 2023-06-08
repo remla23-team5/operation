@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: lib
-        image: ghcr.io/remla23-team5/model-service:latest
+        image: ghcr.io/remla23-team5/model-service:v0.0.12
         ports:
         - containerPort: 8080
 
@@ -58,7 +58,7 @@ spec:
     spec:
       containers:
       - name: lib
-        image: ghcr.io/remla23-team5/model-service:v2
+        image: ghcr.io/remla23-team5/model-service:v0.0.12
         ports:
         - containerPort: 8080
 
@@ -182,11 +182,11 @@ spec:
     - destination:
         host: app
         subset: v1
-      weight: 90
+      weight: 50
     - destination:
         host: app
         subset: v2
-      weight: 10
+      weight: 50
 
 ---
 
