@@ -57,20 +57,22 @@ helm install <name> ./remla23-team5-helm-chart
 
 `minikube service sms-web-serv --url -p remla`
 
-## Istio
+# Istio
+
+## Traffic Management
 
 Assign docker atleast 8GB ram.
 ```
 minikube start --memory=7951 --cpus=4 -p istio
 
-istioctl install
+istioctl install -y
 kubectl label ns default istio-injection=enabled
 
 kubectl apply -f ./addons/prometheus.yaml
 kubectl apply -f ./addons/jaeger.yaml
 kubectl apply -f ./addons/kiali.yaml
 
-kubectl apply -f istio.yaml
+kubectl apply -f traffic-management.yaml
 ```
 
 AND
@@ -78,3 +80,15 @@ AND
 open new terminal (and keep it open)
 
 `sudo minikube tunnel`
+
+## Additional Use Case (Shadow Deployment)
+
+If you applied the yaml file in traffic management, delete it.
+
+`kubectl delete -f traffic-management.yaml`
+
+Apply the shadow-deployment
+
+`kubectl apply -f shadow.yaml`
+
+To monitor that it does indeed work, open two terminals and run logs of v1 and v2 pod of model-service. You will notice the same message in both places.
