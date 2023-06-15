@@ -72,7 +72,7 @@ kubectl apply -f ./addons/prometheus.yaml
 kubectl apply -f ./addons/jaeger.yaml
 kubectl apply -f ./addons/kiali.yaml
 
-kubectl apply -f traffic-management.yaml
+kubectl apply -f istio.yaml
 ```
 
 AND
@@ -81,11 +81,15 @@ open new terminal (and keep it open)
 
 `sudo minikube tunnel`
 
+## Additional Use Case (Rate-Limit)
+
+The rate is 10/minute. If you try to exceed, you will be blocked and can not make a review.
+
 ## Additional Use Case (Shadow Deployment)
 
 If you applied the yaml file in traffic management, delete it.
 
-`kubectl delete -f traffic-management.yaml`
+`kubectl delete -f istio.yaml`
 
 Apply the shadow-deployment
 

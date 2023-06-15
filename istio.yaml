@@ -58,33 +58,6 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: model-service-v2
-  labels:
-    app: model-service
-    version: v2
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: model-service
-      version: v2
-  template:
-    metadata:
-      labels:
-        app: model-service
-        version: v2
-    spec:
-      containers:
-      - name: model-service
-        image: ghcr.io/remla23-team5/model-service:v0.0.12
-        ports:
-        - containerPort: 8080
-
----
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
   name: app-v2
   labels:
     app: app
@@ -143,7 +116,7 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: app
+  name: app-destination-rule
 spec:
   host: app
   subsets:
@@ -159,7 +132,7 @@ spec:
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: model-service
+  name: model-service-destination-rule
 spec:
   host: model-service-serv
   subsets:
@@ -225,21 +198,46 @@ spec:
 ---
 
 apiVersion: networking.istio.io/v1alpha3
-kind: VirtualService
+kind: EnvoyFilter
 metadata:
-  name: model-service
+  name: limit-app-service-local
 spec:
-  hosts:
-  - model-service
-  http:
-  - match:
-    - sourceLabels:
-        version: v2
-    route:
-    - destination:
-        host: model-service-serv
-        subset: v2
-  - route:
-    - destination:
-        host: model-service-serv
-        subset: v1
+  workloadSelector:
+    labels:
+      app: app
+  configPatches:
+    - applyTo: HTTP_FILTER
+      match:
+        context: SIDECAR_INBOUND
+        listener:
+          filterChain:
+            filter:
+              name: "envoy.filters.network.http_connection_manager"
+      patch:
+        operation: INSERT_BEFORE
+        value:
+          name: envoy.filters.http.local_ratelimit
+          typed_config:
+            "@type": type.googleapis.com/udpa.type.v1.TypedStruct
+            type_url: type.googleapis.com/envoy.extensions.filters.http.local_ratelimit.v3.LocalRateLimit
+            value:
+              stat_prefix: http_local_rate_limiter
+              token_bucket:
+                max_tokens: 10
+                tokens_per_fill: 10
+                fill_interval: 60s
+              filter_enabled:
+                runtime_key: local_rate_limit_enabled
+                default_value:
+                  numerator: 100
+                  denominator: HUNDRED
+              filter_enforced:
+                runtime_key: local_rate_limit_enforced
+                default_value:
+                  numerator: 100
+                  denominator: HUNDRED
+              response_headers_to_add:
+                - append: false
+                  header:
+                    key: x-local-rate-limit
+                    value: 'true'
