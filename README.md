@@ -51,11 +51,12 @@ For more information, please refer to the documentation in the repository.
 ## Helm Chart
 
 ```
-cd remla23-team5-helm-chart/
-helm install <name> ./remla23-team5-helm-chart
+helm install team5 team5-chart
+helm delete team5
 ```
 
-`minikube service sms-web-serv --url -p remla`
+TODO: Ivan, Is the thing below correct?
+minikube service sms-web-serv --url -p remla`
 
 # Istio
 
