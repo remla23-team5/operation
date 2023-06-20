@@ -1,51 +1,55 @@
+{{- with .Values.modelservice }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: model-service-depl
   labels:
-    app: model-service
+    app: {{.labelApp}}
 spec:
-  replicas: 1
+  replicas: {{.replicas}}
   selector:
     matchLabels:
-      app: model-service
+      app: {{.labelApp}}
   template:
     metadata:
       labels:
-        app: model-service
+        app: {{.labelApp}}
     spec:
       containers:
       - name: model-service
-        image: ghcr.io/remla23-team5/model-service:latest
+        image: {{.image}}:{{.imageTag}}
         ports:
-        - containerPort: 8080
+        - containerPort: {{.containerPort}}
+{{- end }}
 
 ---
 
+{{- with .Values.app}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: app-depl
   labels:
-    app: app
+    app: {{.labelApp}}
 spec:
-  replicas: 1
+  replicas: {{.replicas}}
   selector:
     matchLabels:
-      app: app
+      app: {{.labelApp}}
   template:
     metadata:
       labels:
-        app: app
+        app: {{.labelApp}}
     spec:
       containers:
       - name: app
-        image: ghcr.io/remla23-team5/app:0.1.8
+        image: {{.image}}:{{.imageTag}}
         ports:
-        - containerPort: 8000
+        - containerPort: {{.containerPort}}
         env:
           - name: model_service_url
             valueFrom:
               configMapKeyRef:
                 name: config
                 key: model_service_url
+{{- end}}

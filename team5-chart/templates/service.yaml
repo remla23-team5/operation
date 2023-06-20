@@ -4,10 +4,10 @@ metadata:
   name: model-service-serv
 spec:
   selector:
-    app: model-service
+    app: {{.Values.modelservice.labelApp}}
   ports:
-    - port: 8080
-      targetPort: 8080
+    - port: {{.Values.modelserviceserv.port}}
+      targetPort: {{.Values.modelservice.containerPort}}
 ---
 
 apiVersion: v1
@@ -15,10 +15,10 @@ kind: Service
 metadata:
   name: app-serv
   labels:
-    app: app-serv
+    app: {{.Values.app.labelApp}}
 spec:
   selector:
-    app: app
+    app: {{.Values.app.labelApp}}
   ports:
-    - port: 8000
-      targetPort: 8000
+    - port: {{.Values.appserv.port}}
+      targetPort: {{.Values.app.containerPort}}

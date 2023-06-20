@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: config
 data:
-  model_service_url: "http://model-service-serv:8080/predict"
+  model_service_url: {{.Values.config.modelserviceurl}}

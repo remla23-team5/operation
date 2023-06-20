@@ -7,4 +7,4 @@ spec:
     service:
       name: app-serv
       port:
-        number: 8000
+        number: {{.Values.appserv.port}}
