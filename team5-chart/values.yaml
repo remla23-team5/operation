@@ -28,4 +28,5 @@ appserv:
 ### ConfigMap ###
 #################
 config:
-  modelserviceurl: http://model-service-serv:8080/predict
+  configMapName: config
+  modelServiceURL: http://model-service-serv:8080/predict
