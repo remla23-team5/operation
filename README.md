@@ -66,7 +66,7 @@ Assign docker atleast 8GB ram.
 ```
 minikube start --memory=7951 --cpus=4 -p istio
 ./setup-istio.sh
-kubectl apply -f istio.yaml
+./setup-kubernetes.sh
 ```
 
 The setup script will install prometheus, jaeger and kiali.
