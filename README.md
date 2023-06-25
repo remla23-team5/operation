@@ -71,11 +71,7 @@ kubectl apply -f istio.yaml
 
 The setup script will install prometheus, jaeger and kiali.
 
-AND
-
-open new terminal (and keep it open)
-
-`sudo minikube tunnel`
+Do `curl localhost` or open [localhost:80](http://localhost/) on your browser. Submitting multiple reviews will direct you to v1 and v2 with probability 50 on both. You can stabilize to a specific version by setting a header `version` and giving it values of either `v1` or `v2`.
 
 ## Additional Use Case (Rate-Limit)
 
