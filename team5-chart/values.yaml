@@ -1,0 +1,32 @@
+###################
+### Deployments ###
+###################
+modelservice:
+  replicas: 1
+  labelApp: model-service
+  image: ghcr.io/remla23-team5/model-service
+  imageTag: latest
+  containerPort: 8080
+
+app:
+  replicas: 1
+  labelApp: app
+  image: ghcr.io/remla23-team5/app
+  imageTag: 0.1.8
+  containerPort: 8000
+
+################
+### Services ###
+################
+modelserviceserv:
+  port: 8080
+
+appserv:
+  port: 8000
+
+#################
+### ConfigMap ###
+#################
+configmap:
+  configMapName: config
+  modelServiceURL: http://model-service-serv:8080/predict

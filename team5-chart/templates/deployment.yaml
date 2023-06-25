@@ -1,0 +1,55 @@
+{{- with .Values.modelservice }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: model-service-depl
+  labels:
+    app: {{.labelApp}}
+spec:
+  replicas: {{.replicas}}
+  selector:
+    matchLabels:
+      app: {{.labelApp}}
+  template:
+    metadata:
+      labels:
+        app: {{.labelApp}}
+    spec:
+      containers:
+      - name: model-service
+        image: {{.image}}:{{.imageTag}}
+        ports:
+        - containerPort: {{.containerPort}}
+{{- end }}
+
+---
+
+{{- with .Values.app}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-depl
+  labels:
+    app: {{.labelApp}}
+spec:
+  replicas: {{.replicas}}
+  selector:
+    matchLabels:
+      app: {{.labelApp}}
+  template:
+    metadata:
+      labels:
+        app: {{.labelApp}}
+    spec:
+      containers:
+      - name: app
+        image: {{.image}}:{{.imageTag}}
+        ports:
+        - containerPort: {{.containerPort}}
+        env:
+          - name: model_service_url
+            valueFrom:
+              configMapKeyRef:
+                name: config
+                key: model_service_url
+{{- end}}

@@ -51,6 +51,28 @@ For more information, please refer to the documentation in the repository.
 ## Helm Chart
 
 ```
-cd remla23-team5-helm-chart/
-helm install <name> ./remla23-team5-helm-chart
+helm install team5 team5-chart
+helm delete team5
 ```
+
+TODO: Ivan, Is the thing below correct?
+`minikube service app-serv --url -p remla`
+
+# Istio
+
+## Traffic Management
+
+Assign docker atleast 8GB ram.
+```
+minikube start --memory=7951 --cpus=4 -p istio
+./setup-istio.sh
+kubectl apply -f istio.yaml
+```
+
+The setup script will install prometheus, jaeger and kiali.
+
+Do `curl localhost` or open [localhost:80](http://localhost/) on your browser. Submitting multiple reviews will direct you to v1 and v2 with probability 50 on both. You can stabilize to a specific version by setting a header `version` and giving it values of either `v1` or `v2`.
+
+## Additional Use Case (Rate-Limit)
+
+The rate is 10/minute. If you try to exceed, you will be blocked and can not make a review.
