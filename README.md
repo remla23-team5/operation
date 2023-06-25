@@ -63,6 +63,7 @@ TODO: Ivan, Is the thing below correct?
 ## Traffic Management
 
 Assign docker atleast 8GB ram.
+
 ```
 minikube start --memory=7951 --cpus=4 -p istio
 ./setup-istio.sh
@@ -71,7 +72,7 @@ minikube start --memory=7951 --cpus=4 -p istio
 
 The setup script will install prometheus, jaeger and kiali.
 
-Do `curl localhost` or open [localhost:80](http://localhost/) on your browser. Submitting multiple reviews will direct you to v1 and v2 with probability 50 on both. You can stabilize to a specific version by setting a header `version` and giving it values of either `v1` or `v2`.
+Use minikube tunnel if needed and then `curl localhost` or open [localhost:80](http://localhost/) on your browser. Submitting multiple reviews will direct you to v1 and v2 with probability 50 on both. You can stabilize to a specific version by setting a header `version` and giving it values of either `v1` or `v2`.
 
 ## Additional Use Case (Rate-Limit)
 

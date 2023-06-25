@@ -46,7 +46,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: ghcr.io/remla23-team5/app:latest
+        image: ghcr.io/remla23-team5/app:mysql
         ports:
         - containerPort: 8000
         env:
@@ -76,7 +76,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: ghcr.io/remla23-team5/app:latest
+        image: ghcr.io/remla23-team5/app:mysql
         ports:
         - containerPort: 8000
         env:
