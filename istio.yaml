@@ -173,15 +173,21 @@ spec:
   - "*"
   http:
   - match:
-    #- queryParams:  # ?version=v2
-    #    version: 
-    #      exact: v2
-    - uri:
-        prefix: /v2
+    - headers:
+        version:
+          exact: v2
     route:
     - destination:
         host: app
         subset: v2
+  - match:
+    - headers:
+        version:
+          exact: v1
+    route:
+    - destination:
+        host: app
+        subset: v1
   - match:
     - uri:
         prefix: /
