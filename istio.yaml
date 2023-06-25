@@ -46,7 +46,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: ghcr.io/remla23-team5/app:latest
+        image: ghcr.io/remla23-team5/app:mysql
         ports:
         - containerPort: 8000
         env:
@@ -76,7 +76,7 @@ spec:
     spec:
       containers:
       - name: app
-        image: ghcr.io/remla23-team5/app:latest
+        image: ghcr.io/remla23-team5/app:mysql
         ports:
         - containerPort: 8000
         env:
@@ -247,66 +247,3 @@ spec:
                   header:
                     key: x-local-rate-limit
                     value: 'true'
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: mysql-serv
-spec:
-  selector:
-    app: mysqldb
-  ports:
-    - name: mysqldb
-      port: 3306
-      targetPort: 3306
-  clusterIP: None
-
----
-
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: mysqldb
-spec:
-  serviceName: mysqldb-serv
-  replicas: 1
-  selector:
-    matchLabels:
-      app: mysqldb
-  template:
-    metadata:
-      labels:
-        app: mysqldb
-    spec:
-      terminationGracePeriodSeconds: 10
-      containers:
-        - name: mysqldb
-          image: mysql:latest
-          imagePullPolicy: IfNotPresent
-          ports:
-            - name: tpc
-              protocol: TCP
-              containerPort: 3306
-          env:
-            - name: MYSQL_ROOT_PASSWORD
-              value: password
-            - name: MYSQL_USER
-              value: user
-            - name: MYSQL_PASSWORD
-              value: pass
-            - name: MYSQL_DATABASE
-              value: restaurants
-          volumeMounts:
-            - name: mysqldb-pvc
-              mountPath: /var/lib/mysql
-  volumeClaimTemplates:
-    - metadata:
-        name: mysqldb-pvc
-      spec:
-        accessModes:
-          - ReadWriteOnce
-        resources:
-          requests:
-            storage: 1Gi
