@@ -3,12 +3,12 @@ entries:
   team5-chart:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2023-06-25T09:26:33.132977+02:00"
+    created: "2023-06-25T09:33:11.178195+02:00"
     description: A Helm chart for Kubernetes
-    digest: c9969fab04f0dea7b976e12ae492eee7f4fe30ac7c13da39e578bb9b10f826db
+    digest: f1d398421fd88f959d7bb524506c2bb0879bf8c6c86ce0c692136c039eeb4e66
     name: team5-chart
     type: application
     urls:
     - https://github.com/remla23-team5/operation/tree/setup-istio/team5-chart-0.1.0.tgz
     version: 0.1.0
-generated: "2023-06-25T09:26:33.132504+02:00"
+generated: "2023-06-25T09:33:11.177659+02:00"
