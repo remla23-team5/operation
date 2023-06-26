@@ -6,3 +6,4 @@ kubectl label ns default istio-injection=enabled
 kubectl apply -f ./addons/prometheus.yaml
 kubectl apply -f ./addons/jaeger.yaml
 kubectl apply -f ./addons/kiali.yaml
+kubectl apply -f ./addons/grafana.yaml

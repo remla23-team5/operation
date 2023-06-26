@@ -27,6 +27,9 @@ deployment:
     ports:
       containerPort: 8000
     path: predict
+    prometheusScrape: \"true\"
+    prometheusPath: /metrics
+    prometheusPort: \"8000\"
   
   appv2:
     name: app
@@ -38,6 +41,9 @@ deployment:
     ports:
       containerPort: 8000
     path: predict
+    prometheusScrape: \"true\"
+    prometheusPath: /metrics
+    prometheusPort: \"8000\"
   
   modelservice:
     labelApp: model-service

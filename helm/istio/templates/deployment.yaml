@@ -44,6 +44,10 @@ spec:
       version: {{.version}}
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: {{.prometheusScrape}}
+        prometheus.io/path: {{.prometheusPath}}
+        prometheus.io/port: {{.prometheusPort}}
       labels:
         app: {{.labelApp}}
         version: {{.version}}
@@ -76,6 +80,10 @@ spec:
       version: {{.version}}
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: {{.prometheusScrape}}
+        prometheus.io/path: {{.prometheusPath}}
+        prometheus.io/port: {{.prometheusPort}}
       labels:
         app: {{.labelApp}}
         version: {{.version}}
