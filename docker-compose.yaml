@@ -2,15 +2,15 @@ version: '3.8'
 
 services:
   app:
-    image: ghcr.io/remla23-team5/app:latest
+    image: ghcr.io/remla23-team5/app:docker
     ports:
       - "${APP_PORT:-8000}:8000"
     depends_on:
       - model-service
+    volumes:
+      - ./docker-db:/home/docker-db
     environment:
       model_service_url: "http://model-service:8080/predict"
 
   model-service:
     image: ghcr.io/remla23-team5/model-service:main
-    ports:
-      - "8080:8080"
