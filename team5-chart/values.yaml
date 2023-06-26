@@ -12,7 +12,7 @@ app:
   replicas: 1
   labelApp: app
   image: ghcr.io/remla23-team5/app
-  imageTag: 0.1.8
+  imageTag: latest
   containerPort: 8000
 
 ################
