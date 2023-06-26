@@ -13,4 +13,4 @@ services:
       model_service_url: "http://model-service:8080/predict"
 
   model-service:
-    image: ghcr.io/remla23-team5/model-service:main
+    image: ghcr.io/remla23-team5/model-service:latest
