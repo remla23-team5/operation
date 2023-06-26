@@ -1,0 +1,41 @@
+{{- $root := . -}}
+{{- with .Values.virtualService}}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: team5-entry-service
+spec:
+  gateways:
+    - team5-gateway
+  hosts:
+  - "*"
+  http:
+  - match:
+    - headers:
+        version:
+          exact: {{.stabilizev2}}
+    route:
+    - destination:
+        host: {{$root.Values.service.app.serviceName}}
+        subset: v2
+  - match:
+    - headers:
+        version:
+          exact: {{.stabilizev1}}
+    route:
+    - destination:
+        host: {{$root.Values.service.app.serviceName}}
+        subset: v1
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: {{$root.Values.service.app.serviceName}}
+        subset: v1
+      weight: {{.weightv1}}
+    - destination:
+        host: {{$root.Values.service.app.serviceName}}
+        subset: v2
+      weight: {{.weightv2}}
+{{- end}}

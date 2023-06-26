@@ -1,0 +1,88 @@
+service:
+  app:
+    serviceName: app
+    ports:
+      name: http
+      port: 1234
+  modelservice:
+    serviceName: model-service-serv
+    ports:
+      name: http
+      port: 1234
+  mysqldb:
+    name: mysqldb-serv
+    ports:
+      name: http
+      port: 3306
+    clusterIP: None
+
+deployment:
+  appv1:
+    name: app
+    labelApp: app
+    version: v1
+    replicas: 1
+    image: ghcr.io/remla23-team5/app
+    imageTag: dialect
+    ports:
+      containerPort: 8000
+    path: predict
+  
+  appv2:
+    name: app
+    labelApp: app
+    version: v2
+    replicas: 1
+    image: ghcr.io/remla23-team5/app
+    imageTag: dialect
+    ports:
+      containerPort: 8000
+    path: predict
+  
+  modelservice:
+    labelApp: model-service
+    version: v1
+    replicas: 1
+    image: ghcr.io/remla23-team5/model-service
+    imageTag: v0.0.12
+    ports:
+      containerPort: 8080
+
+statefulset:
+  mysqldb:
+    labelApp: mysqldb
+    replicas: 1
+    labelApp: mysqldb
+    image: mysql
+    imageTag: 8.0.30
+    ports:
+      name: tcp
+      protocol: TCP
+      containerPort: 3306
+    databaseName: restaurants
+    storage: 1Gi
+
+hpa:
+  appv1:
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80
+  appv2:
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80
+  modelservice:
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80
+
+envoyfilter:
+  maxTokens: 10
+  tokensPerFill: 10
+  fillInterval: 10
+
+virtualService:
+  weightv1: 50
+  weightv2: 50
+  stabilizev1: v1
+  stabilizev2: v2

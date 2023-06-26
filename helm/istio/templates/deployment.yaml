@@ -1,0 +1,91 @@
+{{- $root := . -}}
+{{- with .Values.deployment.modelservice}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: model-service
+  labels:
+    app: {{.labelApp}}
+    version: {{.version}}
+spec:
+  replicas: {{.replicas}}
+  selector:
+    matchLabels:
+      app: {{.labelApp}}
+      version: {{.version}}
+  template:
+    metadata:
+      labels:
+        app: {{.labelApp}}
+        version: {{.version}}
+    spec:
+      containers:
+      - name: model-service
+        image: {{.image}}:{{.imageTag}}
+        ports:
+        - containerPort: {{.ports.containerPort}}
+{{- end}}
+
+---
+
+{{- with .Values.deployment.appv1}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.name}}-{{.version}}
+  labels:
+    app: {{.labelApp}}
+    version: {{.version}}
+spec:
+  replicas: {{.replicas}}
+  selector:
+    matchLabels:
+      app: {{.labelApp}}
+      version: {{.version}}
+  template:
+    metadata:
+      labels:
+        app: {{.labelApp}}
+        version: {{.version}}
+    spec:
+      containers:
+      - name: app
+        image: {{.image}}:{{.imageTag}}
+        ports:
+        - containerPort: {{.ports.containerPort}}
+        env:
+        - name: model_service_url
+          value: http://{{$root.Values.service.modelservice.serviceName}}:{{$root.Values.service.modelservice.ports.port}}/{{.path}}
+{{- end}}
+
+---
+
+{{- with .Values.deployment.appv2}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.name}}-{{.version}}
+  labels:
+    app: {{.labelApp}}
+    version: {{.version}}
+spec:
+  replicas: {{.replicas}}
+  selector:
+    matchLabels:
+      app: {{.labelApp}}
+      version: {{.version}}
+  template:
+    metadata:
+      labels:
+        app: {{.labelApp}}
+        version: {{.version}}
+    spec:
+      containers:
+      - name: app
+        image: {{.image}}:{{.imageTag}}
+        ports:
+        - containerPort: {{.ports.containerPort}}
+        env:
+        - name: model_service_url
+          value: http://{{$root.Values.service.modelservice.serviceName}}:{{$root.Values.service.modelservice.ports.port}}/{{.path}}
+{{- end}}
