@@ -1,42 +1,29 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: mysqldb-serv
-spec:
-  selector:
-    app: mysqldb
-  ports:
-    - name: mysqldb
-      port: 3306
-      targetPort: 3306
-  clusterIP: None
-
----
-
+{{- $root := . -}}
+{{- with .Values.statefulset.mysqldb}}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mysqldb
 spec:
-  serviceName: mysqldb-serv
-  replicas: 1
+  serviceName: {{$root.Values.service.mysqldb.serviceName}}
+  replicas: {{.replicas}}
   selector:
     matchLabels:
-      app: mysqldb
+      app: {{.labelApp}}
   template:
     metadata:
       labels:
-        app: mysqldb
+        app: {{.labelApp}}
     spec:
       terminationGracePeriodSeconds: 10
       containers:
         - name: mysqldb
-          image: mysql:8.0.30
+          image: {{.image}}:{{.imageTag}}
           imagePullPolicy: IfNotPresent
           ports:
-            - name: tpc
-              protocol: TCP
-              containerPort: 3306
+            - name: {{.ports.name}}
+              protocol: {{.ports.protocol}}
+              containerPort: {{.ports.containerPort}}
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
@@ -54,7 +41,7 @@ spec:
                   name: mysqldb-secret
                   key: MYSQL_PASSWORD
             - name: MYSQL_DATABASE
-              value: restaurants
+              value: {{.databaseName}}
           volumeMounts:
             - name: mysqldb-pvc
               mountPath: /var/lib/mysql
@@ -66,4 +53,5 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: 1Gi
+            storage: {{.storage}}
+{{- end}}

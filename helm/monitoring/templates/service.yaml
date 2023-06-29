@@ -1,0 +1,59 @@
+{{- $root := . -}}
+{{- with .Values.service.app}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.serviceName}}
+spec:
+  selector:
+    app: {{$root.Values.deployment.app.labelApp}}
+  ports:
+    - name: {{.ports.name}}
+      port: {{.ports.port}}
+      targetPort: {{$root.Values.deployment.app.ports.containerPort}}
+{{- end}}
+
+---
+
+{{- with .Values.service.modelservice}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.serviceName}}
+spec:
+  selector:
+    app: {{$root.Values.deployment.modelservice.labelApp}}
+  ports:
+    - name: {{.ports.name}}
+      port: {{.ports.port}}
+      targetPort: {{$root.Values.deployment.modelservice.ports.containerPort}}
+{{- end}}
+
+---
+#{{- with .Values.service.mysqldb}}
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: mysqldb-serv
+#spec:
+#  selector:
+#    app: {{$root.Values.statefulset.mysqldb.labelApp}}
+#  ports:
+#    - name: {{.ports.name}}
+#      port: {{.ports.port}}
+#      targetPort: {{.ports.targetPort}}
+#  clusterIP: {{.clusterIP}}
+#{{- end}}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysqldb-serv
+spec:
+  selector:
+    app: mysqldb
+  ports:
+    - name: mysqldb
+      port: 3306
+      targetPort: 3306
+  clusterIP: None
