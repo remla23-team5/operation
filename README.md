@@ -105,7 +105,7 @@ minikube start -p monitoring
 ```
 4. Enable the `ingress` addon for the new cluster.
 ```
-minikube addons enable ingress -p remla
+minikube addons enable ingress -p monitoring
 ``` 
 5. Run the following commands: (where `<NAME>` is a placeholder for a string)
 ```
