@@ -25,11 +25,11 @@ spec:
 
 ---
 
-{{- with .Values.deployment.appv1}}
+{{- with .Values.deployment.app}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{.name}}-{{.version}}
+  name: {{.name}}
   labels:
     app: {{.labelApp}}
 spec:

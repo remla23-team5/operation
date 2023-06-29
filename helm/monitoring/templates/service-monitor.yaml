@@ -1,0 +1,12 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: service-monitor
+  labels:
+    release: {{.Release.Name}}
+spec:
+  selector:
+    matchLabels:
+      app: {{.Values.service.app.serviceName}}
+  endpoints:
+  - interval: {{.Values.serviceMonitor.interval}}

@@ -23,7 +23,7 @@ deployment:
     version: v1
     replicas: 1
     image: ghcr.io/remla23-team5/app
-    imageTag: dialect
+    imageTag: v1
     ports:
       containerPort: 8000
     path: predict
@@ -37,7 +37,7 @@ deployment:
     version: v2
     replicas: 1
     image: ghcr.io/remla23-team5/app
-    imageTag: dialect
+    imageTag: v2
     ports:
       containerPort: 8000
     path: predict
@@ -50,7 +50,7 @@ deployment:
     version: v1
     replicas: 1
     image: ghcr.io/remla23-team5/model-service
-    imageTag: v0.0.12
+    imageTag: latest
     ports:
       containerPort: 8080
 
