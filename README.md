@@ -48,30 +48,37 @@ To help you understand the code base, here are some pointers to interesting file
 
 For more information, please refer to the documentation in the repository.
 
+## Monitoring on Kubernetes (Assignment 2)
+`kubectl apply -f sentiment-analysis.yaml`
+TODO: Ivan, could you add the other steps here please?
+
 ## Helm Chart
 
 ```
-helm install team5 team5-chart
-helm delete team5
+helm install monitoring helm/monitoring
+helm delete monitoring
 ```
 
 TODO: Ivan, Is the thing below correct?
 `minikube service app-serv --url -p remla`
 
-# Istio
+# Istio (Assignment 3)
 
 ## Traffic Management
 
 Assign docker atleast 8GB ram.
+
 ```
 minikube start --memory=7951 --cpus=4 -p istio
 ./setup-istio.sh
-kubectl apply -f istio.yaml
+kubectl apply -f mysqldb-secret.yaml
 ```
+
+For helm use `helm install istio helm/istio` and for kubectl use `./setup-kubernetes.sh`. To cleanup, use `help delete istio` or `./teardown-kubernetes.sh`.
 
 The setup script will install prometheus, jaeger and kiali.
 
-Do `curl localhost` or open [localhost:80](http://localhost/) on your browser. Submitting multiple reviews will direct you to v1 and v2 with probability 50 on both. You can stabilize to a specific version by setting a header `version` and giving it values of either `v1` or `v2`.
+Use minikube tunnel if needed and then `curl localhost` or open [localhost:80](http://localhost/) on your browser. Submitting multiple reviews will direct you to v1 and v2 with probability 50 on both. You can stabilize to a specific version by setting a header `version` and giving it values of either `v1` or `v2`.
 
 ## Additional Use Case (Rate-Limit)
 

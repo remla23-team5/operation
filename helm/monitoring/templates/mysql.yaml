@@ -1,0 +1,57 @@
+{{- $root := . -}}
+{{- with .Values.statefulset.mysqldb}}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysqldb
+spec:
+  serviceName: {{$root.Values.service.mysqldb.serviceName}}
+  replicas: {{.replicas}}
+  selector:
+    matchLabels:
+      app: {{.labelApp}}
+  template:
+    metadata:
+      labels:
+        app: {{.labelApp}}
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: mysqldb
+          image: {{.image}}:{{.imageTag}}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: {{.ports.name}}
+              protocol: {{.ports.protocol}}
+              containerPort: {{.ports.containerPort}}
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysqldb-secret
+                  key: MYSQL_ROOT_PASSWORD
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysqldb-secret
+                  key: MYSQL_USER
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysqldb-secret
+                  key: MYSQL_PASSWORD
+            - name: MYSQL_DATABASE
+              value: {{.databaseName}}
+          volumeMounts:
+            - name: mysqldb-pvc
+              mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+    - metadata:
+        name: mysqldb-pvc
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{.storage}}
+{{- end}}

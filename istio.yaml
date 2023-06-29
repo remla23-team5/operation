@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: model-service-v1
+  name: model-service
   labels:
     app: model-service
     version: v1
@@ -40,13 +40,17 @@ spec:
       version: v1
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "8000"
       labels:
         app: app
         version: v1
     spec:
       containers:
       - name: app
-        image: ghcr.io/remla23-team5/app:latest
+        image: ghcr.io/remla23-team5/app:mysql
         ports:
         - containerPort: 8000
         env:
@@ -70,13 +74,17 @@ spec:
       version: v2
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: /metrics
+        prometheus.io/port: "8000"
       labels:
         app: app
         version: v2
     spec:
       containers:
       - name: app
-        image: ghcr.io/remla23-team5/app:v2
+        image: ghcr.io/remla23-team5/app:mysql
         ports:
         - containerPort: 8000
         env:
@@ -110,6 +118,51 @@ spec:
     - name: http
       port: 1234
       targetPort: 8080
+
+---
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: model-service-autoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: model-service
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 50
+
+---
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: app-v1-autoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: app-v1
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 50
+
+---
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: app-v2-autoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: app-v2
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 50
 
 ---
 
@@ -231,7 +284,7 @@ spec:
               token_bucket:
                 max_tokens: 10
                 tokens_per_fill: 10
-                fill_interval: 60s
+                fill_interval: 1s
               filter_enabled:
                 runtime_key: local_rate_limit_enabled
                 default_value:

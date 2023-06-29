@@ -1,0 +1,49 @@
+{{- $root := . -}}
+{{- with .Values.hpa.appv1}}
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{$root.Values.deployment.appv1.name}}-{{$root.Values.deployment.appv1.version}}-autoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{$root.Values.deployment.appv1.name}}-{{$root.Values.deployment.appv1.version}}
+  minReplicas: {{.minReplicas}}
+  maxReplicas: {{.maxReplicas}}
+  targetCPUUtilizationPercentage: {{.targetCPUUtilizationPercentage}}
+{{- end}}
+
+---
+
+{{- with .Values.hpa.appv2}}
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{$root.Values.deployment.appv2.name}}-{{$root.Values.deployment.appv2.version}}-autoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{$root.Values.deployment.appv2.name}}-{{$root.Values.deployment.appv2.version}}
+  minReplicas: {{.minReplicas}}
+  maxReplicas: {{.maxReplicas}}
+  targetCPUUtilizationPercentage: {{.targetCPUUtilizationPercentage}}
+{{- end}}
+
+---
+
+{{- with .Values.hpa.modelservice}}
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: model-service-autoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: model-service
+  minReplicas: {{.minReplicas}}
+  maxReplicas: {{.maxReplicas}}
+  targetCPUUtilizationPercentage: {{.targetCPUUtilizationPercentage}}
+{{- end}}
