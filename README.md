@@ -72,7 +72,7 @@ minikube start -p monitoring
 ```
 4. Enable the `ingress` addon for the new cluster.
 ```
-minikube addons enable ingress -p remla
+minikube addons enable ingress -p monitoring
 ``` 
 5. Install the Prometheus stack on the new cluster using the following commands:
 ```
@@ -118,13 +118,15 @@ helm install <NAME> helm/monitoring/
 
 The web application can be accessed through the `ingress-nginx-controller` service using a tunnel.
 
-To access Prometheus, please run the command `kubectl port-forward service/myprom-kube-prometheus-sta-prometheus <PORT>:9090`, if you have deployed the setup without using the provided Helm chart. Otherwise, run the command `kubectl port-forward service/<NAME>-kube-prometheus-prometheus <PORT>:9090`, where `<NAME>` is the same string you used when deploying the setup and `<PORT>` is a placeholder for some port number. After that, you will be able to access Prometheus by going to `localhost:<PORT>`.
+To access Prometheus, please run the command `kubectl port-forward service/myprom-kube-prometheus-sta-prometheus <PORT>:9090`, if you have deployed the setup without using the provided Helm chart. Otherwise, run the command `kubectl port-forward service/<NAME>-kube-prometheus-prometheus <PORT>:9090`, where `<NAME>` is the same string you used when deploying the setup and `<PORT>` is a placeholder for some port number. After that, you will be able to access Prometheus by going to `localhost:<PORT>` in your browser.
 
-To access Grafana, please run the command `kubectl port-forward service/myprom-grafana <PORT>:80`, if you have deployed the setup without using the provided Helm chart. Otherwise, run the command `kubectl port-forward service/<NAME>-grafana <PORT>:80`, where `<NAME>` is the same string you used when deploying the setup and `<PORT>` is a placeholder for some port number. After that, you will be able to access Grafana by going to `localhost:<PORT>`.
+To access Grafana, please run the command `kubectl port-forward service/myprom-grafana <PORT>:80`, if you have deployed the setup without using the provided Helm chart. Otherwise, run the command `kubectl port-forward service/<NAME>-grafana <PORT>:80`, where `<NAME>` is the same string you used when deploying the setup and `<PORT>` is a placeholder for some port number. After that, you will be able to access Grafana by going to `localhost:<PORT>` in your browser.
 
 **NOTE**: We provide a Grafana dashboard (the file `grafana-dashboard.json`) which can be used to inspect the app-specific metrics exposed by the web application. If you deploy the setup without using the provided Helm chart, then you will have to manually import the provided dashboard to Grafana. However, if you deploy the setup using the provided Helm chart, then Helm will automatically import the provided dashboard to Grafana.
 
 ## Istio (Assignment 3)
+
+**NOTE**: The setup for assignment 3 uses slightly modified versions of the web application (the Docker images [ghcr.io/remla23-team5/app:v1](https://github.com/remla23-team5/app/pkgs/container/app/104763791?tag=v1) for v1 and [ghcr.io/remla23-team5/app:v2](https://github.com/remla23-team5/app/pkgs/container/app/105189336?tag=v2) for v2) which allow us to run our experiment.
 
 ### Traffic Management
 
